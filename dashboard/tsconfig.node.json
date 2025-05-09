@@ -11,12 +11,14 @@
     "composite": true,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "skipLibCheck": true,
     "types": [
-      "node"
+      "node",
+      "vue-router"
     ],
-    "target": "ES2022",
     "lib": [
       "ES2023"
     ],

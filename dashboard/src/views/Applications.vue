@@ -22,6 +22,7 @@ let loading = false;
 let error = '';
 
 onMounted(() => {
+    console.log('applications mounted')
     get();
     events?.watch(this, get, 'refresh');
 })
