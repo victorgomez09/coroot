@@ -33,11 +33,10 @@
                                 :to="{ name: 'overview', params: { projectId: p.id } }">
                                 {{ p.name }}
                             </v-list-item>
-                            <!-- <v-list-item v-if="!user.readonly" :to="{ name: 'project_new' }" exact>
+                            <v-list-item v-if="!user.readonly" :to="{ name: 'project_new' }" exact>
                                 <v-icon small class="mr-1">mdi-plus</v-icon> new project
-                            </v-list-item> -->
-                            <!-- <v-list-item v-else-if="!projects.length"> no projects available </v-list-item> -->
-                            <v-list-item> no projects available </v-list-item>
+                            </v-list-item>
+                            <v-list-item v-else-if="!projects.length"> no projects available </v-list-item>
                         </v-list>
                     </v-menu>
                 </div>

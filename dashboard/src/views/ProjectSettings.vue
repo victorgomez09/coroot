@@ -31,7 +31,7 @@ const props = defineProps({
 })
 const api = inject<Api>("$api")
 const validators = inject<any>("$validators")
-const events = inject<any>("$events")
+// const events = inject<any>("$events")
 const router = useRouter()
 
 onMounted(() => {
@@ -51,7 +51,7 @@ const message = ref('')
 const fetchData = () => {
     loading.value = true;
     error.value = '';
-    api.getProject(props.projectId, (data: any, err: string) => {
+    api?.getProject(props.projectId, (data: any, err: string) => {
         loading.value = false;
         if (err) {
             error.value = err;
@@ -64,6 +64,7 @@ const fetchData = () => {
         // }
     });
 };
+
 const save = () => {
     if (!valid.value) {
         return;
@@ -71,13 +72,14 @@ const save = () => {
     loading.value = true;
     error.value = '';
     message.value = '';
-    api.saveProject(props.projectId, { name: name.value }, (data: any, err: string) => {
+    api?.saveProject(props.projectId, { name: name.value }, (data: any, err: string) => {
         loading.value = false;
         if (err) {
             error.value = err;
             return;
         }
-        events.emit('projects');
+        // console.log('events', events)
+        // events.emit('projects');
         message.value = 'Settings were successfully updated.';
         if (!props.projectId) {
             const projectId = data.trim();
