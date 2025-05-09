@@ -22,8 +22,25 @@ const routes: RouteRecordRaw[] = [
     component: Login,
     meta: { anonymous: true },
   },
-  { path: '/logout', name: 'logout', component: Login, meta: { anonymous: true } },
-  { path: '/p/settings/:tab?', name: 'project_new', component: Project, props: true },
+  {
+    path: "/logout",
+    name: "logout",
+    component: Login,
+    meta: { anonymous: true },
+  },
+  {
+    path: "/p/settings/:tab?",
+    name: "project_new",
+    component: Project,
+    props: true,
+  },
+  {
+    path: "/p/:projectId/settings/:tab?",
+    name: "project_settings",
+    component: Project,
+    props: true,
+    meta: { stats: { params: ["tab"] } },
+  },
   {
     path: "/p/:projectId/:view?/:id?/:report?",
     name: "overview",

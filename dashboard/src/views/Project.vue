@@ -1,5 +1,5 @@
 <template>
-    <!-- <div class="mx-auto">
+    <div class="mx-auto">
         <h1 class="text-h5 my-5">Configuration</h1>
 
         <v-tabs height="40" show-arrows slider-size="2">
@@ -12,7 +12,7 @@
             <h2 class="text-h5 my-5">Project name</h2>
             <ProjectSettings :projectId="projectId" />
 
-            <template v-if="projectId">
+            <!-- <template v-if="projectId">
                 <h2 class="text-h5 mt-10 mb-5">Status</h2>
                 <ProjectStatus :projectId="projectId" />
 
@@ -22,10 +22,10 @@
 
                 <h2 class="text-h5 mt-10 mb-5">Danger zone</h2>
                 <ProjectDelete :projectId="projectId" />
-            </template>
+            </template> -->
         </template>
 
-        <template v-if="tab === 'prometheus'">
+        <!-- <template v-if="tab === 'prometheus'">
             <h1 class="text-h5 my-5">
                 Prometheus integration
                 <a href="https://docs.coroot.com/configuration/prometheus" target="_blank">
@@ -148,12 +148,12 @@
                 </a>
             </h1>
             <SSO />
-        </template>
-    </div> -->
+        </template> -->
+    </div>
 </template>
 
-<script>
-// import ProjectSettings from './ProjectSettings.vue';
+<script setup lang="ts">
+import ProjectSettings from '@/views/ProjectSettings.vue';
 // import ProjectStatus from './ProjectStatus.vue';
 // import ProjectApiKeys from './ProjectApiKeys.vue';
 // import ProjectDelete from './ProjectDelete.vue';
@@ -167,55 +167,30 @@
 // import Users from './Users.vue';
 // import RBAC from './RBAC.vue';
 // import SSO from './SSO.vue';
-// import IntegrationAI from '@/views/IntegrationAI.vue';
 
-// export default {
-//     props: {
-//         projectId: String,
-//         tab: String,
-//     },
+const props = defineProps({
+    projectId: String,
+    tab: String,
+})
+const router = useRouter()
 
-//     components: {
-//         IntegrationAI,
-//         CustomApplications,
-//         IntegrationPrometheus,
-//         IntegrationClickhouse,
-//         IntegrationAWS,
-//         Inspections,
-//         ProjectSettings,
-//         ProjectStatus,
-//         ProjectApiKeys,
-//         ProjectDelete,
-//         ApplicationCategories,
-//         Integrations,
-//         Users,
-//         RBAC,
-//         SSO,
-//     },
+onMounted(() => {
+    router.replace({ params: { tab: undefined } });
+})
 
-//     mounted() {
-//         if (!this.tabs.find((t) => t.id === this.tab)) {
-//             this.$router.replace({ params: { tab: undefined } });
-//         }
-//     },
-
-//     computed: {
-//         tabs() {
-//             const disabled = !this.projectId;
-//             return [
-//                 { id: undefined, name: 'General' },
-//                 { id: 'prometheus', name: 'Prometheus', disabled },
-//                 { id: 'clickhouse', name: 'Clickhouse', disabled },
-//                 { id: 'ai', name: 'AI', disabled },
-//                 { id: 'aws', name: 'AWS', disabled },
-//                 { id: 'inspections', name: 'Inspections', disabled },
-//                 { id: 'applications', name: 'Applications', disabled },
-//                 { id: 'notifications', name: 'Notifications', disabled },
-//                 { id: 'organization', name: 'Organization' },
-//             ];
-//         },
-//     },
-// };
+const tabs = computed(() => {
+    const disabled = !props.projectId;
+    return [
+        { id: undefined, name: 'General' },
+        { id: 'prometheus', name: 'Prometheus', disabled },
+        { id: 'clickhouse', name: 'Clickhouse', disabled },
+        { id: 'aws', name: 'AWS', disabled },
+        { id: 'inspections', name: 'Inspections', disabled },
+        { id: 'applications', name: 'Applications', disabled },
+        { id: 'notifications', name: 'Notifications', disabled },
+        { id: 'organization', name: 'Organization' },
+    ];
+})
 </script>
 
 <style scoped></style>

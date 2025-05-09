@@ -17,10 +17,13 @@
     "skipLibCheck": true,
     "types": [
       "node",
-      "vue-router"
     ],
     "lib": [
       "ES2023"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

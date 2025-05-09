@@ -96,7 +96,7 @@
         <v-main>
             <v-container style="padding-bottom: 128px">
                 <v-alert v-if="status && status.status === 'warning' && route.name !== 'project_settings'" color="red"
-                    elevation="2" border="left" class="mt-4" colored-border>
+                    elevation="2" border="start" class="mt-4" colored-border>
                     <div class="d-sm-flex align-center" style="gap: 8px">
                         <template v-if="status.error">
                             {{ status.error }}
@@ -160,9 +160,9 @@ const router = useRouter()
 const { smAndUp, smAndDown } = useDisplay()
 
 const location = ref("Choose a project")
-const loading: Ref<boolean> = ref(true);
+const loading: Ref<boolean> = ref<boolean>(true);
 const user: Ref<any> = ref({})
-let changePassword = false
+const changePassword: Ref<boolean> = ref(false)
 
 const getUser = () => {
     if (route.meta.anonymous) {
@@ -212,7 +212,7 @@ const project = computed(() => {
 });
 const status = computed(() => {
     console.log('api?.context', api?.context)
-    return project.value ? api?.context.status : null;
+    return project.value ? api?.context.status as any : null;
 });
 
 watch(route, (prev) => {
