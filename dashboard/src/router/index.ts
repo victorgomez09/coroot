@@ -86,10 +86,6 @@ router.onError((err, to) => {
   }
 });
 
-router.isReady().then(() => {
-  localStorage.removeItem("vuetify:dynamic-reload");
-});
-
 router.afterEach((to) => {
   if (to.matched[0]) {
     let p = to.matched[0].path;

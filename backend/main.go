@@ -192,7 +192,7 @@ func main() {
 	router.PathPrefix("").Handler(http.RedirectHandler(cfg.UrlBasePath, http.StatusMovedPermanently))
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://humble-succotash-9q4p7qg9rxq3pqqw-3000.app.github.dev"},
+		AllowedOrigins:   []string{"https://humble-succotash-9q4p7qg9rxq3pqqw-3000.app.github.dev", "http://localhost:3000"},
 		AllowCredentials: true,
 		// Enable Debugging for testing, consider disabling in production
 		Debug: false,

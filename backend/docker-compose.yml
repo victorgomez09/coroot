@@ -25,6 +25,7 @@ services:
     volumes:
       - clickhouse_data:/var/lib/clickhouse
       - clickhouse_logs:/var/log/clickhouse-server
+      - ./deploy/users.xml:/etc/clickhouse-server/users.xml
     ports:
       - '9000:9000'
     ulimits:
