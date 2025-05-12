@@ -22,8 +22,8 @@
     </div> -->
 
     <template v-if="view === 'applications'">
-      <!-- <Application v-if="props.id" :id="id" :report="props.report" /> -->
-      <!-- <Applications v-else /> -->
+      <!-- <Application v-if="props.id" :id="id" :report="props.report" />
+      <Applications v-else /> -->
       <Applications />
     </template>
 

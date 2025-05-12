@@ -19,7 +19,7 @@ import {
   type SelectRenderLabel,
   type SelectRenderTag,
 } from "naive-ui";
-import { BookIcon, WineIcon } from "lucide-vue-next";
+import { BookIcon } from "lucide-vue-next";
 
 const route = useRoute();
 const router = useRouter();
@@ -62,12 +62,6 @@ const menuOptions: MenuOption[] = [
         key: "rat",
       },
     ],
-  },
-  {
-    label: "A Wild Sheep Chase",
-    key: "a-wild-sheep-chase",
-    disabled: true,
-    icon: renderIcon(BookIcon),
   },
 ];
 
@@ -114,7 +108,6 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 const renderLabel: SelectRenderLabel = (option) => {
-  console.log("option", option);
   return h(
     "div",
     {
@@ -131,20 +124,17 @@ const renderLabel: SelectRenderLabel = (option) => {
             marginLeft: "12px",
             padding: "4px 0",
           },
+           onClick: () => router.push({
+            name: "overview",
+             params: { projectId: p.id }
+          })
         },
         [
           h("div", null, [
             isProxy(option)
               ? (toRaw(option) as any).name
               : (option as any).name,
-          ]),
-          h(
-            NText,
-            { depth: 3, tag: "div" },
-            {
-              default: () => "description",
-            }
-          ),
+            ]),
         ]
       ),
     ]
@@ -186,6 +176,7 @@ const renderSingleSelectTag: SelectRenderTag = ({ option }) => {
           :options="menuOptions"
         />
 
+        {{ project }}
         <n-select
           v-model:value="project"
           :options="projects"
@@ -194,15 +185,15 @@ const renderSingleSelectTag: SelectRenderTag = ({ option }) => {
           class="!w-10/12"
         />
       </n-layout-sider>
-    </n-layout>
 
-    <n-layout>
-      <Welcome
+      <div class="flex flex-col gap-2 p-2 ms-2 w-full h-full">
+        <Welcome
         v-if="route.name === 'index' && user && !projects.length"
         :user="user"
-      />
-
-      <router-view v-else />
+        />
+        
+        <router-view v-else />
+      </div>
     </n-layout>
   </div>
 </template>

@@ -1,216 +1,20 @@
-<template>
-  <div>
-    <v-progress-linear indeterminate v-if="loading" color="green" />
-
-    <v-alert v-if="error" color="red" icon="mdi-alert-octagon-outline" outlined>
-      {{ error }}
-    </v-alert>
-
-    <!-- <ApplicationFilter :applications="applications" @filter="setFilter" class="my-4" /> -->
-
-    <div class="legend mb-3">
-      <div v-for="s in statuses" class="item">
-        <div class="count" :class="s.color">{{ s.count }}</div>
-        <div class="label">{{ s.name }}</div>
-      </div>
-    </div>
-
-    <v-data-table
-      dense
-      class="table"
-      :mobile-breakpoint="0"
-      :items-per-page="50"
-      :items="items"
-      no-data-text="No applications found"
-      :headers="[
-        { value: 'application', title: 'Application', sortable: false },
-        { value: 'type', title: 'Type', sortable: false },
-        { value: 'errors', title: 'Errors', sortable: false, align: 'end' },
-        { value: 'latency', title: 'Latency', sortable: false, align: 'end' },
-        {
-          value: 'upstreams',
-          title: 'Upstreams',
-          sortable: false,
-          align: 'end',
-        },
-        {
-          value: 'instances',
-          title: 'Instances',
-          sortable: false,
-          align: 'end',
-        },
-        { value: 'restarts', title: 'Restarts', sortable: false, align: 'end' },
-        { value: 'cpu', title: 'CPU', sortable: false, align: 'end' },
-        { value: 'memory', title: 'Mem', sortable: false, align: 'end' },
-        {
-          value: 'disk_io_load',
-          title: 'I/O load',
-          sortable: false,
-          align: 'end',
-        },
-        { value: 'disk_usage', title: 'Disk', sortable: false, align: 'end' },
-        { value: 'network', title: 'Net', sortable: false, align: 'end' },
-        { value: 'dns', title: 'DNS', sortable: false, align: 'end' },
-        { value: 'logs', title: 'Logs', sortable: false, align: 'center' },
-      ]"
-      :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100, -1] }"
-    >
-      <template #item.application="{ item: { id, name, ns, color } }">
-        <div class="application">
-          <div class="status" :class="color" />
-          <div class="name">
-            <router-link :to="link(id, undefined)">{{ name }}</router-link>
-            <span v-if="ns" class="caption grey--text"> (ns:{{ ns }})</span>
-          </div>
-        </div>
-      </template>
-      <template #item.type="{ item: { id, type } }">
-        <div v-if="type" class="d-flex align-center">
-          <!-- <AppIcon :icon="type.icon" class="mr-1" /> -->
-
-          <router-link
-            v-if="type.report"
-            :to="link(id, type.report)"
-            class="type"
-            :class="type.status"
-          >
-            {{ type.name }}
-          </router-link>
-          <div v-else class="type">
-            {{ type.name }}
-          </div>
-        </div>
-      </template>
-      <template #item.errors="{ item: { id, errors: param } }">
-        <router-link
-          :to="link(id, 'SLO')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.latency="{ item: { id, latency: param } }">
-        <router-link
-          :to="link(id, 'SLO')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.upstreams="{ item: { id, upstreams: param } }">
-        <router-link
-          :to="link(id, 'SLO')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.instances="{ item: { id, instances: param } }">
-        <router-link
-          :to="link(id, 'Instances')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.restarts="{ item: { id, restarts: param } }">
-        <router-link
-          :to="link(id, 'Instances')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.cpu="{ item: { id, cpu: param } }">
-        <router-link
-          :to="link(id, 'CPU')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.memory="{ item: { id, memory: param } }">
-        <router-link
-          :to="link(id, 'Memory')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.disk_io_load="{ item: { id, disk_io_load: param } }">
-        <router-link
-          :to="link(id, 'Storage')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.disk_usage="{ item: { id, disk_usage: param } }">
-        <router-link
-          :to="link(id, 'Storage')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.network="{ item: { id, network: param } }">
-        <router-link
-          :to="link(id, 'Net')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.dns="{ item: { id, dns: param } }">
-        <router-link
-          :to="link(id, 'DNS')"
-          class="value"
-          :class="param.status"
-          >{{ param.value || "–" }}</router-link
-        >
-      </template>
-      <template #item.logs="{ item: { id, logs: param } }">
-        <router-link
-          :to="
-            link(id, 'Logs', {
-              query: JSON.stringify({ source: 'agent', view: 'patterns' }),
-            })
-          "
-          class="logs"
-        >
-          <div class="value">{{ param.value || "–" }}</div>
-          <v-sparkline
-            v-if="param.chart"
-            :value="param.chart.map((v: any) => (v === null ? 0 : v))"
-            fill
-            smooth
-            padding="4"
-            :color="`blue ${vuetify.theme.dark ? '' : 'lighten-4'}`"
-            height="30"
-            width="120"
-          />
-        </router-link>
-      </template>
-    </v-data-table>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { inject, onMounted, computed } from "vue";
+import { type DataTableColumns } from "naive-ui";
+import type { RowData } from "naive-ui/es/data-table/src/interface";
+import { computed, h, inject, onMounted } from "vue";
+import { useRouter } from "vue-router";
 // import ApplicationFilter from '../components/ApplicationFilter.vue';
-// import AppIcon from '../components/AppIcon.vue';
 
-// const events = inject<any>("$events");
 const utils = inject<any>("$utils");
 const api = inject<any>("$api");
-const vuetify = inject<any>("$vuetify");
+const router = useRouter()
 
 const statusesEnum: { [key: string]: { name: string; color: string } } = {
-  critical: { name: "SLO violation", color: "red lighten-1" },
-  warning: { name: "Warning", color: "orange lighten-1" },
-  info: { name: "Errors in logs", color: "blue lighten-1" },
-  unknown: { name: "Integration required", color: "purple lighten-1" },
-  ok: { name: "OK", color: "green lighten-1" },
+  critical: { name: "SLO violation", color: "error" },
+  warning: { name: "Warning", color: "warning" },
+  info: { name: "Errors in logs", color: "info" },
+  unknown: { name: "Integration required", color: "" },
+  ok: { name: "OK", color: "success" },
 };
 
 let applications: any[] = [];
@@ -276,136 +80,318 @@ const get = () => {
 // const setFilter = (filter: string) => {
 //     filter = filter;
 // };
-const link = (id: any, report: any, query?: any) => {
+
+const rowProps = (row: RowData) => {
   return {
-    name: "overview",
-    params: { view: "applications", id, report },
-    query: { ...query, ...utils.contextQuery() },
-  };
+    style: 'cursor: pointer;',
+  }
 };
+
+const columns: DataTableColumns<any> = [
+  {
+    title: 'Application',
+    key: 'application',
+    render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: undefined },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Type',
+    key: 'type'
+  },
+  {
+    title: 'Errors',
+    key: 'errors',
+    render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'SLO' },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Latency',
+    key: 'latency',
+    render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'SLO' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Upstreams',
+    key: 'upstreams',
+    render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'SLO' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Instances',
+    key: 'instances',
+    render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: undefined },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Restarts',
+    key: 'restarts',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Instances' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'CPU',
+    key: 'cpu',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'CPU' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Memory',
+    key: 'memory',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Memory' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'I/O load',
+    key: 'disk_io_load',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Storage' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Disk',
+    key: 'disk_usage',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Storage' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'Net',
+    key: 'network',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Net' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+  {
+    title: 'DNS',
+    key: 'dns',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Instances' },
+            query: { ...utils.contextQuery() },
+          })
+        },
+        { default: () => 'DNS' }
+      )
+    }
+  },
+  {
+    title: 'Logs',
+    key: 'logs',
+     render(row) {
+      return h(
+        "div",
+        {
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => router.push({
+            name: "overview",
+            params: { view: "applications", id: row.id, report: 'Instances' },
+            query: { ...utils.contextQuery(), query: JSON.stringify({ source: 'agent', view: 'patterns' }) },
+          })
+        },
+        { default: () => '' }
+      )
+    }
+  },
+]
 </script>
 
-<style scoped>
-.table:deep(table) {
-  min-width: 500px;
-}
+<template>
+  <div>
+    <n-progress v-if="loading" type="line" :percentage="100" indicator-placement="inside" processing />
 
-.table:deep(tr:hover) {
-  background-color: unset !important;
-}
+    <n-alert v-if="error" title="Something goes wrong!" type="error">
+      {{ error }}
+    </n-alert>
 
-.table:deep(th) {
-  white-space: nowrap;
-}
+    <!-- <ApplicationFilter :applications="applications" @filter="setFilter" class="my-4" /> -->
 
-.table:deep(th),
-.table:deep(td) {
-  padding: 4px 8px !important;
-}
+    <div class="flex items-center gap-2 mb-3">
+        <n-space :size="24" align="center" item-style="display: flex;">
 
-.table:deep(td:has(.application)) {
-  padding-left: 0 !important;
-}
+          <div v-for="s in statuses" class="flex items-center gap-1">
+            <n-tag :bordered="false" :type="s.color" class="font-semibold">{{ s.count }}</n-tag>
+            <div class="font-semibold">{{ s.name }}</div>
+          </div>
+        </n-space>
+    </div>
 
-.table .application {
-  display: flex;
-  gap: 4px;
-}
+    <n-data-table :columns="columns" :data="items" :row-props="rowProps" />
+    <!-- <v-data-table
+<template #item.type="{ item: { id, type } }">
+        <div v-if="type" class="d-flex align-center">
 
-.table .application .status {
-  height: 20px;
-  width: 4px;
-}
-
-.table .application .name {
-  max-width: 30ch;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.table .logs {
-  display: block;
-  position: relative;
-  height: 100%;
-  color: inherit;
-}
-
-.table .logs .value {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.table:deep(td:has(.logs)) {
-  width: 120px;
-  min-width: 120px;
-  padding: 0 !important;
-}
-
-.type {
-  opacity: 60%;
-  white-space: nowrap;
-}
-
-.type.unknown {
-  opacity: 100%;
-  border-bottom: 2px solid #ab47bc !important;
-  background-color: unset !important;
-}
-
-.type.ok {
-  opacity: 100%;
-}
-
-.type.critical,
-.type.warning {
-  opacity: 100%;
-  border-bottom: 2px solid red !important;
-  background-color: unset !important;
-}
-
-.value {
-  color: inherit;
-  opacity: 60%;
-  white-space: nowrap;
-}
-
-.value.critical,
-.value.warning {
-  opacity: 100%;
-  border-bottom: 2px solid red !important;
-  background-color: unset !important;
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.legend .item {
-  display: flex;
-  gap: 4px;
-}
-
-.legend .count {
-  padding: 0 4px;
-  border-radius: 2px;
-  height: 18px;
-  line-height: 18px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.legend .label {
-  opacity: 60%;
-}
-</style>
+          <router-link
+            v-if="type.report"
+            :to="link(id, type.report)"
+            class="type"
+            :class="type.status"
+          >
+            {{ type.name }}
+          </router-link>
+          <div v-else class="type">
+            {{ type.name }}
+          </div>
+        </div>
+      </template>
+</v-data-table> -->
+  </div>
+</template>

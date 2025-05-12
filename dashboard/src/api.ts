@@ -26,7 +26,8 @@ export default class Api {
       this.deviceId = v4();
       storage.local("device-id", this.deviceId);
     }
-    this.basePath = "http://localhost:8080/";
+    // this.basePath = "http://localhost:8080/";
+    this.basePath = "https://humble-succotash-9q4p7qg9rxq3pqqw-8080.app.github.dev/";
     this.axios = axios.create({
       baseURL: this.basePath + "api/",
       timeout: 60000,

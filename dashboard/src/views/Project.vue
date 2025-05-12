@@ -1,12 +1,60 @@
+<script setup lang="ts">
+import ProjectSettings from '@/views/ProjectSettings.vue';
+import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+// import ProjectStatus from './ProjectStatus.vue';
+// import ProjectApiKeys from './ProjectApiKeys.vue';
+// import ProjectDelete from './ProjectDelete.vue';
+// import Inspections from './Inspections.vue';
+// import ApplicationCategories from './ApplicationCategories.vue';
+// import Integrations from './Integrations.vue';
+// import IntegrationPrometheus from './IntegrationPrometheus.vue';
+// import IntegrationClickhouse from './IntegrationClickhouse.vue';
+// import IntegrationAWS from './IntegrationAWS.vue';
+// import CustomApplications from './CustomApplications.vue';
+// import Users from './Users.vue';
+// import RBAC from './RBAC.vue';
+// import SSO from './SSO.vue';
+
+const props = defineProps({
+    projectId: String,
+    tab: String,
+})
+const router = useRouter()
+
+onMounted(() => {
+    router.replace({ params: { tab: undefined } });
+})
+
+const tabs = computed(() => {
+    const disabled = !props.projectId;
+    return [
+        { id: undefined, name: 'General' },
+        { id: 'prometheus', name: 'Prometheus', disabled },
+        { id: 'clickhouse', name: 'Clickhouse', disabled },
+        { id: 'aws', name: 'AWS', disabled },
+        { id: 'inspections', name: 'Inspections', disabled },
+        { id: 'applications', name: 'Applications', disabled },
+        { id: 'notifications', name: 'Notifications', disabled },
+        { id: 'organization', name: 'Organization' },
+    ];
+})
+</script>
+
 <template>
     <div class="mx-auto">
         <h1 class="text-h5 my-5">Configuration</h1>
 
-        <v-tabs height="40" show-arrows slider-size="2">
+        <n-tabs type="line" animated>
+            <n-tab-pane v-for="t in tabs" :name="t.name" :tab="t.name" :key="t.id" :to="{ params: { tab: t.id } }" :disabled="t.disabled">
+                Wonderwall
+            </n-tab-pane>
+        </n-tabs>
+        <!-- <v-tabs height="40" show-arrows slider-size="2">
             <v-tab v-for="t in tabs" :key="t.id" :to="{ params: { tab: t.id } }" :disabled="t.disabled" exact>
                 {{ t.name }}
             </v-tab>
-        </v-tabs>
+        </v-tabs> -->
 
         <template v-if="!tab">
             <h2 class="text-h5 my-5">Project name</h2>
@@ -151,46 +199,3 @@
         </template> -->
     </div>
 </template>
-
-<script setup lang="ts">
-import ProjectSettings from '@/views/ProjectSettings.vue';
-// import ProjectStatus from './ProjectStatus.vue';
-// import ProjectApiKeys from './ProjectApiKeys.vue';
-// import ProjectDelete from './ProjectDelete.vue';
-// import Inspections from './Inspections.vue';
-// import ApplicationCategories from './ApplicationCategories.vue';
-// import Integrations from './Integrations.vue';
-// import IntegrationPrometheus from './IntegrationPrometheus.vue';
-// import IntegrationClickhouse from './IntegrationClickhouse.vue';
-// import IntegrationAWS from './IntegrationAWS.vue';
-// import CustomApplications from './CustomApplications.vue';
-// import Users from './Users.vue';
-// import RBAC from './RBAC.vue';
-// import SSO from './SSO.vue';
-
-const props = defineProps({
-    projectId: String,
-    tab: String,
-})
-const router = useRouter()
-
-onMounted(() => {
-    router.replace({ params: { tab: undefined } });
-})
-
-const tabs = computed(() => {
-    const disabled = !props.projectId;
-    return [
-        { id: undefined, name: 'General' },
-        { id: 'prometheus', name: 'Prometheus', disabled },
-        { id: 'clickhouse', name: 'Clickhouse', disabled },
-        { id: 'aws', name: 'AWS', disabled },
-        { id: 'inspections', name: 'Inspections', disabled },
-        { id: 'applications', name: 'Applications', disabled },
-        { id: 'notifications', name: 'Notifications', disabled },
-        { id: 'organization', name: 'Organization' },
-    ];
-})
-</script>
-
-<style scoped></style>
