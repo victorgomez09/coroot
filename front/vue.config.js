@@ -6,4 +6,22 @@ module.exports = defineConfig({
     '@prometheus-io/codemirror-promql',
     'sql-formatter'
   ],
+
+   chainWebpack: (config) => {
+    config.resolve.alias.set('vue', '@vue/compat')
+
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
+      })
+  }
 });

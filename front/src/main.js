@@ -1,30 +1,31 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import vuetify from '@/plugins/vuetify';
-import '@/plugins/resize';
-import '@/plugins/highlight';
-import pluralize from 'pluralize';
-import events from '@/utils/events';
-import Utils from '@/utils/utils';
-import * as validators from '@/utils/validators';
-import * as storage from '@/utils/storage';
-import * as format from '@/utils/format';
 import Api from '@/api';
 import App from '@/App';
-import Project from '@/views/Project';
-import Overview from '@/views/Overview';
+import '@/plugins/highlight';
+import '@/plugins/resize';
+import vuetify from '@/plugins/vuetify';
+import events from '@/utils/events';
+import * as format from '@/utils/format';
+import * as storage from '@/utils/storage';
+import Utils from '@/utils/utils';
+import * as validators from '@/utils/validators';
 import Login from '@/views/auth/Login.vue';
 import Logout from '@/views/auth/Logout.vue';
 import Saml from '@/views/auth/Saml.vue';
+import Overview from '@/views/Overview';
+import Project from '@/views/Project';
+import pluralize from 'pluralize';
+import Vue, { createApp } from 'vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
 const config = window.coroot;
 
-Vue.use(VueRouter);
-const router = new VueRouter({
-    mode: 'history',
+// Vue.use(VueRouter);
+// const router = new VueRouter({
+const router = createRouter({
+    mode: createWebHashHistory(),
     base: config.base_path,
     routes: [
         { path: '/login', name: 'login', component: Login, meta: { anonymous: true } },
@@ -40,7 +41,7 @@ const router = new VueRouter({
             meta: { stats: { params: ['view', 'report'] } },
         },
         { path: '/', name: 'index', component: App },
-        { path: '*', redirect: { name: 'index' } },
+        { path: "/:catchAll(.*)", redirect: { name: 'index' } },
     ],
     scrollBehavior(to) {
         if (to.hash) {
@@ -115,8 +116,9 @@ Vue.prototype.$validators = validators;
 Vue.prototype.$storage = storage;
 Vue.prototype.$coroot = config;
 
-new Vue({
-    router,
-    vuetify,
-    render: (h) => h(App),
-}).$mount('#app');
+// new Vue({
+//     router,
+//     vuetify,
+//     render: (h) => h(App),
+// }).$mount('#app');
+createApp(App).use(router).use(vuetify).mount('#app')
