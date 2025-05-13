@@ -21,44 +21,25 @@ onMounted(() => {
   }
 });
 
-const views = computed(() => {
-  return {
-    "": route.query, // a bit of a hack to enable reactivity for tabs
-    applications: "Applications",
-    incidents: "Incidents",
-    map: "Service Map",
-    traces: "Traces",
-    nodes: "Nodes",
-    deployments: "Deployments",
-    costs: "Costs",
-    anomalies: "",
-    risks: "Risks",
-  };
-});
+// const views = computed(() => {
+//   return {
+//     "": route.query, // a bit of a hack to enable reactivity for tabs
+//     applications: "Applications",
+//     incidents: "Incidents",
+//     map: "Service Map",
+//     traces: "Traces",
+//     nodes: "Nodes",
+//     deployments: "Deployments",
+//     costs: "Costs",
+//     anomalies: "",
+//     risks: "Risks",
+//   };
+// });
 </script>
 
 <template>
   <div>
     {{ view }}
-    <!-- <div class="my-4">
-      <v-tabs :value="props.view" height="40" show-arrows slider-size="2">
-        <template v-for="(name, view) in views">
-          <v-tab
-            v-if="name && view"
-            :to="{
-              params: { view, id: undefined, report: undefined },
-              query:
-                view === 'incidents'
-                  ? { ...utils?.contextQuery(), incident: undefined }
-                  : utils?.contextQuery(),
-            }"
-            :tab-value="view"
-          >
-            {{ name }}
-          </v-tab>
-        </template>
-      </v-tabs>
-    </div> -->
 
     <template v-if="view === 'applications'">
       <Application v-if="props.id" :id="id" :report="props.report" />
