@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// import Chart from './Chart';
-// import ChartGroup from './ChartGroup';
-// import DependencyMap from './DependencyMap';
+import Chart from './Chart.vue';
+import ChartGroup from './ChartGroup.vue';
+import DependencyMap from './DependencyMap.vue';
 // import Table from './Table';
 // import Heatmap from './Heatmap';
 // import Logs from '../views/Logs';

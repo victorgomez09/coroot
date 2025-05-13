@@ -27,10 +27,10 @@ const items = computed(() => {
     }
     const ctx = props.ctx;
     const b = props.bbox;
-    const norm = (x: any) => (x - props.ctx?.from) / (props.ctx?.to - props.ctx?.from);
+    const norm = (x: any) => (x - ctx?.from) / (ctx?.to - ctx?.from);
     return props.incidents.map((i: any) => {
-        const x1 = Math.max(0, b.width * norm(i.x1 - props.ctx?.step / 2));
-        const x2 = Math.min(b.width, b.width * norm(i.x2 + props.ctx?.step / 2));
+        const x1 = Math.max(0, b.width * norm(i.x1 - ctx?.step / 2));
+        const x2 = Math.min(b.width, b.width * norm(i.x2 + ctx?.step / 2));
         return {
             style: {
                 left: x1 + 'px',

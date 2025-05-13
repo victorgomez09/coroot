@@ -9,7 +9,7 @@ const props = defineProps({
     doc: String,
 });
 
-const charts = ref < any > ()
+const charts = ref<any>()
 const i = charts.value.findIndex((ch: any) => ch.featured)
 const selected = charts.value[i < 0 ? 0 : i].title
 
@@ -31,16 +31,18 @@ const splitTitle = computed(() => {
     if (parts?.length === 1) {
         return { head: parts[0], tail: '' };
     }
-    
+
     return { head: parts![0], tail: parts![1] };
 });
 
 function sort() {
-    const res = Array.from(this.charts);
+    const res = Array.from(props.charts || []);
     res.sort((a: any, b: any) => a.title.localeCompare(b.title));
-    return res;
+
+    return res as any[];
 };
-function select(s) {
+function select(s: any) {
+    console.log("select_s", s)
     // $emit('select', s);
 };
 </script>
@@ -49,7 +51,13 @@ function select(s) {
     <Chart :chart="chart" :selection="selection" @select="select">
         <template v-slot:title>
             <span>{{ splitTitle.head }}</span>
-            <v-menu offset-y>
+
+            <ul class="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
+                <li v-for="ch in sorted" :key="ch.title" @click="selected = ch.title" class="py-1 px-2"><a
+                        class="item">{{ ch.title }}</a></li>
+            </ul>
+
+            <!-- <v-menu offset-y>
                 <template #activator="{ on, attrs }">
                     <v-btn v-bind="attrs" v-on="on" text outlined x-small class="selector">
                         <span style="max-width: 90%; overflow: hidden; text-overflow: ellipsis">{{ selected }}</span>
@@ -64,7 +72,7 @@ function select(s) {
                         </v-list-item>
                     </v-list-item-group>
                 </v-list>
-            </v-menu>
+            </v-menu> -->
             <span>{{ splitTitle.tail }}</span>
             <a v-if="doc" :href="doc" target="_blank" class="ml-1"><v-icon small>mdi-information-outline</v-icon></a>
         </template>

@@ -10,6 +10,7 @@ import Api from "@/api";
 import * as storage from "@/utils/storage";
 import * as validators from "@/utils/validators";
 import * as events from "@/utils/events";
+import * as format from "@/utils/format";
 import router from "@/router";
 import Utils from "@/utils/utils";
 
@@ -26,6 +27,7 @@ app.provide("$storage", storage);
 app.provide("$validators", validators);
 app.provide("$events", events);
 app.provide("$utils", new Utils(router));
+app.provide("$format", format);
 
 registerPlugins(app);
 
