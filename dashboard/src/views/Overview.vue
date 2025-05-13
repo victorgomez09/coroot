@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import type Utils from "@/utils/utils";
+import Applications from "@/views/Applications.vue";
+import Application from "@/views/Application.vue";
+import { computed, inject, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const props = defineProps({
+  view: String,
+  id: String,
+  report: String,
+});
+
+const route = useRoute();
+const router = useRouter();
+const utils = inject<Utils>("$utils");
+
+onMounted(() => {
+  if (!props.view) {
+    router.push({ name: "overview", params: { view: "applications" } });
+  }
+});
+
+const views = computed(() => {
+  return {
+    "": route.query, // a bit of a hack to enable reactivity for tabs
+    applications: "Applications",
+    incidents: "Incidents",
+    map: "Service Map",
+    traces: "Traces",
+    nodes: "Nodes",
+    deployments: "Deployments",
+    costs: "Costs",
+    anomalies: "",
+    risks: "Risks",
+  };
+});
+</script>
+
 <template>
   <div>
     {{ view }}
@@ -22,9 +61,8 @@
     </div> -->
 
     <template v-if="view === 'applications'">
-      <!-- <Application v-if="props.id" :id="id" :report="props.report" />
-      <Applications v-else /> -->
-      <Applications />
+      <Application v-if="props.id" :id="id" :report="props.report" />
+      <Applications v-else />
     </template>
 
     <!-- <template v-if="view === 'incidents'">
@@ -63,41 +101,3 @@
         </template> -->
   </div>
 </template>
-
-<script setup lang="ts">
-import type Utils from "@/utils/utils";
-import Applications from "@/views/Applications.vue";
-import { computed, inject, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-
-const props = defineProps({
-  view: String,
-  id: String,
-  report: String,
-});
-
-const route = useRoute();
-const router = useRouter();
-const utils = inject<Utils>("$utils");
-
-onMounted(() => {
-  if (!props.view) {
-    router.push({ name: "overview", params: { view: "applications" } });
-  }
-});
-
-const views = computed(() => {
-  return {
-    "": route.query, // a bit of a hack to enable reactivity for tabs
-    applications: "Applications",
-    incidents: "Incidents",
-    map: "Service Map",
-    traces: "Traces",
-    nodes: "Nodes",
-    deployments: "Deployments",
-    costs: "Costs",
-    anomalies: "",
-    risks: "Risks",
-  };
-});
-</script>
